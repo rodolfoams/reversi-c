@@ -25,7 +25,7 @@ The game ends when there are no moves left for both players or when the board is
 3. Define turn (DONE)
 4. Mark valid move positions (DONE)
 5. Display board (DONE)
-6. Display current player
+6. Display current player (DONE)
 7. Prompt next move
 8. Make move
 9. End game

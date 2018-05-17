@@ -15,6 +15,11 @@
 #define EMPTY    2
 #define PLAYABLE 3
 
+#define WHITE_MARKER    "  X  "
+#define BLACK_MARKER    "  O  "
+#define EMPTY_MARKER    "     "
+#define PLAYABLE_MARKER "  *  "
+
 #define FALSE 0
 #define TRUE  1
 
@@ -160,16 +165,16 @@ void draw_board( )
         {
             if ( board[i][j] == WHITE )
             {
-                printf( "  O  " );
+                printf( "%s", WHITE_MARKER );
             } else if ( board[i][j] == BLACK )
             {
-                printf( "  X  " );
+                printf( "%s", BLACK_MARKER );
             } else if ( board[i][j] == PLAYABLE )
             {
-                printf( "  *  " );
+                printf( "%s", PLAYABLE_MARKER );
             } else
             {
-                printf( "     " );
+                printf( "%s", EMPTY_MARKER );
             }
             printf("|");
         }
@@ -178,12 +183,35 @@ void draw_board( )
     }
 }
 
+void display_current_player( )
+{
+    printf( "Current player:" );
+    if ( current_player == WHITE )
+        printf( "%s", WHITE_MARKER );
+    else
+        printf( "%s", BLACK_MARKER );
+    printf( "\n" );
+}
+
 int main( )
 {
     init_game();
     while ( !game_ended ){
-        if ( !wrong_move ) mark_playable_positions();
-        draw_board();
+        if ( !wrong_move ) mark_playable_positions( );
+        if ( !has_valid_move )
+        {
+            if ( skipped_turn )
+            {
+                game_ended = 1;
+                continue;
+            }
+            skipped_turn = 1;
+            current_player = ( current_player + 1 ) % 2;
+            continue;
+        }
+        skipped_turn = 0;
+        draw_board( );
+        display_current_player( );
         if ( wrong_move )
         {
             printf( "You entered an invalid move!\n" );
