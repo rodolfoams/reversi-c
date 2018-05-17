@@ -17,3 +17,15 @@ The current player is shown in the bottom of the screen.
 The valid plays are shown in the board by an asterisk ('*') mark.
 The player should input the position of the next play indicating, respectively, the column and row to place the next piece (e.g.: "C4").
 The game ends when there are no moves left for both players or when the board is completely filled.
+
+## Roadmap
+
+1. Create a board (DONE)
+2. Create piece markers (DONE)
+3. Define turn (DONE)
+4. Mark valid move positions (DONE)
+5. Display board (DONE)
+6. Display current player
+7. Prompt next move
+8. Make move
+9. End game

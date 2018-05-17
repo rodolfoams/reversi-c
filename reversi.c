@@ -18,12 +18,15 @@
 #define FALSE 0
 #define TRUE  1
 
-const char *row_names = "ABCDEFGH";
-const char *col_names = "12345678";
+const char *row_names = "01234567";
+const char *col_names = "01234567";
 
 char board[8][8];
 int current_player;
 int game_ended = 0;
+int skipped_turn = 0;
+int wrong_move = 0;
+int has_valid_move = 0;
 
 void init_game( )
 {
@@ -136,37 +139,42 @@ void mark_playable_positions( )
     {
         for ( int j=0; j<7; ++j )
         {
-            if ( is_playable( i, j ) ) board[i][j] = PLAYABLE;
+            if ( is_playable( i, j ) )
+            {
+                board[i][j] = PLAYABLE;
+                has_valid_move = 1;
+            }
         }
     }
 }
 
 void draw_board( )
 {
-    printf( "    %c   %c   %c   %c   %c   %c   %c   %c\n", col_names[0], col_names[1], col_names[2], col_names[3], col_names[4], col_names[5], col_names[6], col_names[7] );
-    printf( "    _   _   _   _   _   _   _   _\n" );
+    printf( "     %c     %c     %c     %c     %c     %c     %c     %c\n", col_names[0], col_names[1], col_names[2], col_names[3], col_names[4], col_names[5], col_names[6], col_names[7] );
+    printf( "   _____ _____ _____ _____ _____ _____ _____ _____\n" );
     for ( int i=0; i<8; ++i )
     {
+        printf( "  |     |     |     |     |     |     |     |     |\n" );
         printf( "%c |", row_names[i] );
         for ( int j=0; j<8; ++j )
         {
             if ( board[i][j] == WHITE )
             {
-                printf( " O " );
+                printf( "  O  " );
             } else if ( board[i][j] == BLACK )
             {
-                printf( " X " );
+                printf( "  X  " );
             } else if ( board[i][j] == PLAYABLE )
             {
-                printf( " * " );
+                printf( "  *  " );
             } else
             {
-                printf( "   " );
+                printf( "     " );
             }
             printf("|");
         }
-        printf("\n");
-        printf( "    _   _   _   _   _   _   _   _\n\n" );
+        printf( "\n" );
+        printf( "  |_____|_____|_____|_____|_____|_____|_____|_____|\n" );
     }
 }
 
@@ -174,8 +182,14 @@ int main( )
 {
     init_game();
     while ( !game_ended ){
-        mark_playable_positions();
+        if ( !wrong_move ) mark_playable_positions();
         draw_board();
+        if ( wrong_move )
+        {
+            printf( "You entered an invalid move!\n" );
+            wrong_move = 0;
+        }
+
         game_ended = 1;
     }
 }
