@@ -28,6 +28,7 @@ The game ends when there are no moves left for both players or when the board is
 6. Display current player (DONE)
 7. Prompt next move
 8. Make move
+9. Change captured pieces
 9. End game
 10. Use ncurses to better control the screen
 11. Pretify
