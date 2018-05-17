@@ -40,7 +40,7 @@ void init_game( )
     board[4][4] = BLACK;
     board[3][4] = WHITE;
     board[4][3] = WHITE;
-    current_player = WHITE;
+    current_player = BLACK;
 }
 
 int is_valid_position( int i, int j )
@@ -140,10 +140,13 @@ int is_playable( int i, int j )
 
 void mark_playable_positions( )
 {
+    has_valid_move = 0;
     for ( int i=0; i<7; ++i )
     {
         for ( int j=0; j<7; ++j )
         {
+            if ( board[i][j] == PLAYABLE )
+                board[i][j] = EMPTY;
             if ( is_playable( i, j ) )
             {
                 board[i][j] = PLAYABLE;
@@ -181,6 +184,16 @@ void draw_board( )
         printf( "\n" );
         printf( "  |_____|_____|_____|_____|_____|_____|_____|_____|\n" );
     }
+    printf( "\n" );
+}
+
+void display_wrong_move( )
+{
+    if ( wrong_move )
+    {
+        printf( "You entered an invalid move!\n" );
+        wrong_move = 0;
+    }
 }
 
 void display_current_player( )
@@ -193,6 +206,37 @@ void display_current_player( )
     printf( "\n" );
 }
 
+void change_current_player( )
+{
+    current_player = ( current_player + 1 ) % 2;
+}
+
+void prompt_move( int *p_row, int *p_column )
+{
+    printf( "Enter your next move below.\n" );
+    printf( "- Row [0-7]: " );
+    scanf( "%d", p_row );
+    printf( "- Column [0-7]: " );
+    scanf( "%d", p_column );
+}
+
+void make_next_move( )
+{
+    int row, column;
+    prompt_move( &row, &column );
+    if ( is_valid_position( row, column ) && board[row][column] == PLAYABLE )
+    {
+        board[row][column] = current_player;
+        change_current_player(  );
+    }
+    else wrong_move = 1;
+}
+
+void display_winner( )
+{
+
+}
+
 int main( )
 {
     init_game();
@@ -203,21 +247,19 @@ int main( )
             if ( skipped_turn )
             {
                 game_ended = 1;
+                draw_board( );
                 continue;
             }
             skipped_turn = 1;
-            current_player = ( current_player + 1 ) % 2;
+            change_current_player( );
             continue;
         }
         skipped_turn = 0;
         draw_board( );
         display_current_player( );
-        if ( wrong_move )
-        {
-            printf( "You entered an invalid move!\n" );
-            wrong_move = 0;
-        }
-
-        game_ended = 1;
+        display_wrong_move( );
+        make_next_move( );
+        // game_ended = 1;
     }
+    display_winner( );
 }
